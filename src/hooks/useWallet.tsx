@@ -1,5 +1,5 @@
 
-import { useState, useEffect, createContext, useContext, ReactNode } from "react";
+import { useState, createContext, useContext, ReactNode } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import { initializeConnector, Web3ReactHooks } from "@web3-react/core";
 import { MetaMask } from "@web3-react/metamask";
