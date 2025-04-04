@@ -1,18 +1,20 @@
 
 import { Web3ReactProvider } from "@web3-react/core";
-import { Web3Provider } from "@ethersproject/providers";
 import { WalletProvider } from "@/hooks/useWallet";
 import { WalletConnect } from "@/components/WalletConnect";
 
-function getLibrary(provider: any): Web3Provider {
-  const library = new Web3Provider(provider);
-  library.pollingInterval = 12000;
-  return library;
-}
+// Import all the connectors and hooks from our updated wallet hook file
+import { connectors } from "@/hooks/useWallet";
 
 const Index = () => {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <Web3ReactProvider
+      connectors={[
+        [connectors.metaMask.connector, connectors.metaMask.hooks],
+        [connectors.walletConnect.connector, connectors.walletConnect.hooks],
+        [connectors.coinbaseWallet.connector, connectors.coinbaseWallet.hooks]
+      ]}
+    >
       <WalletProvider>
         <div className="min-h-screen flex flex-col py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-white to-wallet-background">
           <header className="mb-12 text-center">

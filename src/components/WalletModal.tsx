@@ -34,15 +34,15 @@ export function WalletModal({ open, onOpenChange }: WalletModalProps) {
             size="lg"
             disabled={isConnecting}
             className="flex items-center justify-between h-16 px-4 rounded-lg hover:bg-wallet-primary/10 hover:border-wallet-primary transition-all"
-            onClick={() => handleConnect("injected")}
+            onClick={() => handleConnect("metaMask")}
           >
             <span className="font-medium">MetaMask</span>
             <div className="h-8 w-8 flex items-center justify-center">
-              {isConnecting && selectedConnector === "injected" ? (
+              {isConnecting && selectedConnector === "metaMask" ? (
                 <div className="h-5 w-5 border-2 border-wallet-primary border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <img
-                  src="https://raw.githubusercontent.com/MetaMask/brand-resources/master/SVG/metamask-fox.svg"
+                  src="/metamask.svg"
                   alt="MetaMask"
                   className="h-8 w-8"
                   onError={(e) => {
@@ -67,7 +67,7 @@ export function WalletModal({ open, onOpenChange }: WalletModalProps) {
                 <div className="h-5 w-5 border-2 border-wallet-primary border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <img
-                  src="https://raw.githubusercontent.com/WalletConnect/walletconnect-assets/master/Icon/Blue%20(Default)/Icon.svg"
+                  src="/walletconnect.svg"
                   alt="WalletConnect"
                   className="h-8 w-8"
                   onError={(e) => {
@@ -92,7 +92,7 @@ export function WalletModal({ open, onOpenChange }: WalletModalProps) {
                 <div className="h-5 w-5 border-2 border-wallet-primary border-t-transparent rounded-full animate-spin"></div>
               ) : (
                 <img
-                  src="https://raw.githubusercontent.com/coinbase/coinbase-wallet-sdk/master/assets/coinbase-wallet-sdk.png"
+                  src="/coinbase.svg"
                   alt="Coinbase Wallet"
                   className="h-8 w-8"
                   onError={(e) => {
