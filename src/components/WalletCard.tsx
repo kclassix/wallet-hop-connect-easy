@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ConnectedWallet, useWallet } from "@/hooks/useWallet";
 import { cn } from "@/lib/utils";
+import { PenLine } from "lucide-react";
 
 interface WalletCardProps {
   wallet: ConnectedWallet;
@@ -14,6 +15,8 @@ interface WalletCardProps {
 export function WalletCard({ wallet, isActive }: WalletCardProps) {
   const { switchWallet, disconnectWallet } = useWallet();
   const [copied, setCopied] = useState(false);
+  const [isSigning, setIsSigning] = useState(false);
+  const [signatureResult, setSignatureResult] = useState<string | null>(null);
 
   // Format address to display
   const formatAddress = (address: string) => {
@@ -25,6 +28,32 @@ export function WalletCard({ wallet, isActive }: WalletCardProps) {
     navigator.clipboard.writeText(wallet.address);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Sign a message with the wallet
+  const signMessage = async () => {
+    try {
+      setIsSigning(true);
+      setSignatureResult(null);
+      
+      // Get the signer from the wallet's provider
+      const signer = wallet.provider?.getSigner();
+      if (!signer) {
+        throw new Error("Signer not available");
+      }
+
+      // Sign a simple message
+      const message = `Hello from Wallet Hop! Signing with address: ${wallet.address} at ${new Date().toISOString()}`;
+      const signature = await signer.signMessage(message);
+      
+      // Show a preview of the signature
+      setSignatureResult(signature.substring(0, 20) + "...");
+    } catch (error: any) {
+      console.error("Signing error:", error);
+      setSignatureResult("Failed: " + (error.message || "Unknown error"));
+    } finally {
+      setIsSigning(false);
+    }
   };
 
   return (
@@ -74,13 +103,30 @@ export function WalletCard({ wallet, isActive }: WalletCardProps) {
             <p className="font-semibold">{wallet.balance} ETH</p>
           </div>
         </div>
+
+        {signatureResult && (
+          <div className="mb-2 text-xs bg-muted p-2 rounded-md overflow-hidden text-ellipsis">
+            <span className="font-medium">Signature:</span> {signatureResult}
+          </div>
+        )}
         
-        <div className="flex gap-2 mt-auto">
+        <div className="grid grid-cols-2 gap-2 mb-2">
+          <Button 
+            variant="outline"
+            size="sm"
+            className="w-full flex items-center justify-center text-wallet-primary border-wallet-primary"
+            onClick={signMessage}
+            disabled={isSigning}
+          >
+            <PenLine className="mr-1 h-4 w-4" />
+            {isSigning ? "Signing..." : "Sign Message"}
+          </Button>
+          
           {!isActive ? (
             <Button 
               variant="default" 
               size="sm" 
-              className="flex-1 bg-wallet-primary hover:bg-wallet-primary/90"
+              className="w-full bg-wallet-primary hover:bg-wallet-primary/90"
               onClick={() => switchWallet(wallet.id)}
             >
               Switch
@@ -89,22 +135,22 @@ export function WalletCard({ wallet, isActive }: WalletCardProps) {
             <Button 
               variant="outline" 
               size="sm" 
-              className="flex-1 text-wallet-primary border-wallet-primary"
+              className="w-full text-wallet-primary border-wallet-primary"
               disabled
             >
               Active
             </Button>
           )}
-          
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="flex-1 hover:text-destructive hover:border-destructive"
-            onClick={() => disconnectWallet(wallet.id)}
-          >
-            Disconnect
-          </Button>
         </div>
+        
+        <Button 
+          variant="outline" 
+          size="sm"
+          className="w-full hover:text-destructive hover:border-destructive"
+          onClick={() => disconnectWallet(wallet.id)}
+        >
+          Disconnect
+        </Button>
       </CardContent>
     </Card>
   );
