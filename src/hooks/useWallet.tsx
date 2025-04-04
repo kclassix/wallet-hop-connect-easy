@@ -17,7 +17,7 @@ const [walletConnectV2, walletConnectV2Hooks] = initializeConnector<WalletConnec
   (actions) => new WalletConnectV2({
     actions,
     options: {
-      projectId: '5cc6ce12efb17f5c10c798f05927b065', // Public WalletConnect project ID
+      projectId: '71284d4eebb94119e15d9281752b6c88', // Public WalletConnect project ID
       chains: [1, 3, 4, 5, 42, 56, 137],
       showQrModal: true
     }
